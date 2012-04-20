@@ -108,5 +108,28 @@ class user
             return array("status" => 203);
         }
     }
+    function getNav($currNav,$username) {
+        $html = '';
+        $html .= '<div class="navbar">';
+        $html .= '<div class="navbar-inner">';
+        $html .= '<div class="container">';
+        $html .= '<div class="nav-collapse">';
+        $html .= '<ul class="nav">';
+       $html .= $currNav == 'accounting_input' ? '<li class="active"><a href="accounting_input.php"><i class="icon-pencil icon-white"></i> 帐目录入</a></li>' : '<li class=""><a href="accounting_input.php"><i class="icon-pencil"></i> 帐目录入</a></li>'; 
+       $html .= $currNav == 'accounting_detail' ? '<li class="active"><a href="accounting_detail.php"><i class="icon-th-list icon-white"></i> 帐目明细</a></li>' : '<li class=""><a href="accounting_detail.php"><i class="icon-th-list"></i> 帐目明细</a></li>'; 
+       $html .= $currNav == 'accounting_agg' ? '<li class="active"><a href="accounting_agg.php"><i class="icon-indent-left icon-white"></i> 帐目汇总</a></li>' : '<li class=""><a href="accounting_agg.php"><i class="icon-indent-left"></i> 帐目汇总</a></li>'; 
+       $html .= '</ul><ul class="nav pull-right actions">';
+       $html .= '<li><a href="login.php?logout=1">Hi,' . $username . ' 登出</a></span></li>';
+       $html .= '</ul></div></div></div></div>';
+       return $html;
+    }
+    function getFooter() {
+        $html = '';
+        $html .= '<footer class="footer">';
+        $html .= '<p>如有疑问或意见，欢迎反馈：<a href="mailto:rujian.hu@gmail.com"><i class="icon-envelope"></i> rujian.hu@gmail.com</a></p>';
+        $html .= '<p>&copy;2012 Sina Weibo <a target="_blank" href="http://weibo.com/richiehrj"><i class="icon-user"></i> 胡汝建</a></p>';
+        $html .= '</footer>';
+        return $html;
+    }
 }
 ?>

@@ -21,39 +21,52 @@ if(isset($_POST['username'])) {
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>登录系统</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
     <!-- Framework CSS -->
-    <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
-    <!--[if lt IE 8]><link rel="stylesheet" href="../blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
-    <style type="text/css" media="screen">
-      p, table, hr, .box { margin-bottom:25px; }
-      .box p { margin-bottom:10px; }
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" >
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css" > 
+    <link rel="stylesheet" href="css/Font-Awesome/css/font-awesome.css" type="text/css" > 
+    <style>
+        .form-actions
+        {
+            background-color:#F5F5F5;
+            border-top:0px;
+        }
     </style>
   </head>
 <body>
-<div class="span-12">
-<form id="login" action="login.php" method="post" >
+<div class="span6">
+<form id="login" class="well form-horizontal" action="login.php" method="post" >
 <fieldset>
 <legend>用户登录</legend>
-<?php echo ($user_id == -1)? "<div class='error'>用户名或者密码错误</div>": "" ?>
-<p>
-    <label for="username">请输入用户名</label><br>
-     <input type="text" class="title" name="username" id="username">
-</p>
-<p>
-    <label for="password">请输入密码</label><br>
-     <input type="password" class="title" name="password" id="password">
-</p>
+<?php echo ($user_id == -1)? "<div class='control-group'><label class='control-label'></label><span class='label label-important'>用户名或者密码错误</span></div>": "" ?>
+
+<div class="control-group">
+    <label class="control-label" for="username">请输入用户名</label>
+<div class="controls">
+     <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span><input type="text" class="span3" name="username" id="username" placeholder="请输入用户名"></div>
+    <span class="help-inline "> <font color="red">*</font></span>
+</div>
+</div>
+<div class="control-group">
+    <label for="password" class="control-label">请输入密码</label>
+<div class="controls">
+     <div class="input-prepend"><span class="add-on"><i class="icon-key"></i></span><input type="password" class="span3" name="password" id="password"></div>
+</div>
+</div>
 <?php echo (isset($_GET['url']) ? "<input id='url' type='hidden' name='url' value='" . $_GET['url'] . "'>" : "") ?>
-<p>
-     <input type="submit" value="提交">
-     <input type="reset" value="重置">
-</p>
+<div class="form-actions">
+     <button type="submit" class="btn btn-primary" >登录</button>
+</div>
 </fieldset>
 </form>
 </div>

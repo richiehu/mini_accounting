@@ -1,0 +1,35 @@
+.form-actions
+{   
+    background-color:#F5F5F5;
+    border-top:0px;
+}   
+.footer {
+    border-top: 1px solid #E5E5E5;
+    margin-top: 45px;
+    padding: 35px 0 36px;
+    text-align: center;
+}
+.footer p { 
+    color: #555555;
+    margin-bottom: 0;
+}
+.table th, .table td  
+{   
+    vertical-align: middle;
+}   
+.table-striped tbody tr:nth-child(2n+1) td, .table-striped tbody tr:nth-child(2n+1) th  
+{   
+    background-color: #E5ECF9;
+}   
+.disable_masking {
+    background-color: #FFFFFF;
+    border: 2px solid #D6CDDE;
+    padding: 20px;
+    position: absolute;
+    width: 600px;
+    z-index: 6001;
+}   
+.closebutton {
+    float: right;
+    text-decoration: none;
+}

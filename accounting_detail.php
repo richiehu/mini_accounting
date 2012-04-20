@@ -10,41 +10,26 @@
     }
 ?>
 
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>帐目明细</title>
 
         <!-- Framework CSS -->
-        <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
-        <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
-        <!--[if lt IE 8]><link rel="stylesheet" href="../blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" >
+        <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css" > 
+        
         <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
         <link href="css/pagination.css" rel="stylesheet" type="text/css">
+        <link href="css/common.css" rel="stylesheet" type="text/css">
         <script src="js/jquery-1.4.2.min.js"></script>
         <script src="js/jquery-ui.min.js"></script>
         <script src="js/jquery.pagination.js"></script>
         <script src="js/floatdialog.js"></script>
         <script src="js/accounting.js"></script>
         <script src="js/common.js"></script>
-        <style type="text/css" media="screen">
-          p, table, hr, .box { margin-top:10px;margin-bottom:0px;padding:0px; }
-          table {border-spacing:1px;}
-          .box p { margin-bottom:10px; }
-          .error,.alert,.notice,.success,.info{padding: 0.4em;margin-left:10px;} 
-        .disable_masking {
-          background-color: #FFFFFF;
-        border: 2px solid #D6CDDE;
-        padding: 20px;
-        position: absolute;
-        width: 600px;
-               z-index: 6001;
-        }
-        .closebutton {
-            float: right;
-            text-decoration: none;
-        }
-        </style>
         <script>
             var currentPage = 0;
             var globalCategoryList ;
@@ -95,7 +80,7 @@
             }
             function drawTable(data) {
                 var content = '';
-               content += "<table align='center' width='100%' border='0' cellspacing='1'  bgcolor='#AAAAAA' style='clear:both;'>";
+               content += "<table align='center' width='100%' class='table table-striped table-bordered'>";
                 content += "<tr bgcolor='#D6CDDE'>";
                 content += "<td><b><div align='center'>日期</div></b></td>";
                 content += "<td><b><div align='center'>消费大类</div></b></td>";
@@ -112,8 +97,8 @@
                     content += "<td><div align='center'>" + data[i]['category_detail_name'] + "</div></td>";
                     content += "<td><div align='center'>" + data[i]['money'] + "</div></td>";
                     content += "<td><div align='center'>" + data[i]['other_information'] + "</div></td>";
-                    content += "<td><input class='detailUpdate' type='button' value='修改' onclick='showDetail(" + data[i]['detail_id'] + ")'></td>"
-                    content += "<td><input type='button' value='删除' onclick='deleDetail(" + data[i]['detail_id'] + ")'></td>"
+                    content += "<td><a class='detailUpdate btn btn-info' onclick='showDetail(" + data[i]['detail_id'] + ")'><i class='icon-edit icon-white'></i> 编辑</a></td>"
+                    content += "<td><a class='btn btn-danger' href='#' onclick='deleDetail(" + data[i]['detail_id'] + ")'><i class='icon-trash icon-white'></i> 删除</a></td>"
                     content += "</tr>";
                 }
                 content += "</table>";
@@ -165,25 +150,15 @@
         </script>
     </head>
     <body>
-        <div class="box">
-            <span style="padding-left:8px; font-size:15px;"> <a href="accounting_input.php">帐目录入</a>&nbsp;|&nbsp;帐目明细&nbsp;|&nbsp;<a href="accounting_agg.php">账面汇总</a> </span>
-        </div>
-        <div style="height:30px;margin-top:5px;border-bottom: 1px solid #CCCCCC;" class="border_bottom">
-            <div style="float:left;margin-left:500px;"><b style="font-size:15px;">帐目明细</b></div>
-            <div style="float:right; padding:5px;">
-            <span>Hi,&nbsp;<b><?php echo $userInfo['username']?></b>&nbsp;[<a href="login.php?logout=1">登出</a>]
-            </div>
-        </div>
-        <div style="height:10px"></div>
-        <div style="width:650px;margin-left:auto;margin-right:auto">
+    <?php echo $user->getNav('accounting_detail',$userInfo['username']);?>
+        <div class="row">
+        <div class="span8 offset2">
             
-            <div >
+            <div class="row">
             <span style="float:left;margin-top:7px;">起始时间</span>
-            <span style="float:left;margin-left: 5px;"><input class="rd_input"  type="text" id="datepicker1" name="datepicker1" readonly="true"></span>
-            </div>
-            <div style="clear:both;">
-            <span style="float:left;margin-top:7px;">结束时间</span>
-            <span style="float:left;margin-left: 5px;"><input class="rd_input"  type="text" id="datepicker2" name="datepicker2" readonly="true"></span>
+            <span style="float:left;margin-left: 5px;"><input  class="span2" type="text" id="datepicker1" name="datepicker1" readonly="true"></span>
+            <span style="float:left;margin-left:20px;margin-top:7px;">结束时间</span>
+            <span style="float:left;margin-left: 5px;"><input class="span2" type="text" id="datepicker2" name="datepicker2" readonly="true"></span>
             </div>
             <div style="clear:both;height:20px;"></div>
             <div id="accounting_content"></div>
@@ -194,7 +169,7 @@
                 <div><a href="javascript:void(0);" class="closebutton">[关闭]</a></div>
                 <div id="modifyTable" style="clear:both;">
                             <input type="hidden" id="detail_id" name="detail_id">
-                    <table align='center' width='100%' cellspacing='1' bgcolor='#AAAAAA' style='clear:both;'>
+                    <table align='center' width='100%' cellspacing='1' bgcolor='#AAAAAA' class='table table-striped table-bordered '>
                         <tr  bgcolor='#D6CDDE'>
                             <td><b><div align='center'>消费日期</div></b></td>
                             <td colspan="2"><input type="text" id="datepicker" name="datepicker" readonly="true"></td>
@@ -210,12 +185,14 @@
                         <tr  bgcolor='#D6CDDE'>
                             <td><b><div align='center'>备注</div></b></td>
                             <td><span style="margin-left:5px;"><input type="text" id="other_information" name="other_information" size="30"></span></td>
-                            <td><input type="button" onclick="updateDetail()" value="更新信息"></td>
+                            <td><input type="button" class="btn btn-info" onclick="updateDetail()" value="更新信息"></td>
                         </tr>
                     </table>
                     
                 </div>
             </div>
         </div>
+        </div>
+        <?php echo $user->getFooter();?>
     </body>
 </html>

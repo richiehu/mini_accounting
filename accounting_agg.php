@@ -10,49 +10,73 @@
     }
 ?>
 
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>帐目汇总</title>
 
         <!-- Framework CSS -->
-        <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
-        <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
-        <!--[if lt IE 8]><link rel="stylesheet" href="../blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" >
+        <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css" > 
         <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
         <link href="css/pagination.css" rel="stylesheet" type="text/css">
-        <script src="js/jquery-1.4.2.min.js"></script>
+        <link href="css/common.css" rel="stylesheet" type="text/css">
+        <script src="../bootstrap/docs/assets/js/jquery.js"></script>
         <script src="js/jquery-ui.min.js"></script>
         <script src="js/jquery.pagination.js"></script>
         <script src="js/floatdialog.js"></script>
         <script src="js/accounting.js"></script>
         <script src="js/common.js"></script>
-        <style type="text/css" media="screen">
-          p, table, hr, .box { margin-top:10px;margin-bottom:0px;padding:0px; }
-          table {border-spacing:1px;}
-          .box p { margin-bottom:10px; }
-          .error,.alert,.notice,.success,.info{padding: 0.4em;margin-left:10px;} 
-        .disable_masking {
-          background-color: #FFFFFF;
-        border: 2px solid #D6CDDE;
-        padding: 20px;
-        position: absolute;
-        width: 600px;
-               z-index: 6001;
-        }
-        .closebutton {
-            float: right;
-            text-decoration: none;
-        }
-        </style>
+        
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="js/amchart/amcharts.js"></script>
+        <script src="js/amchart/raphael.js"></script>
         <script>
+            function makePie(data) {
+               $('#accounting_content').html('<div style="height:500px;" id="amchart"></div>'); 
+                var chartData = [];
+                for(var i in data) {
+                    var tmp = {
+
+                        'category_name': data[i]['category_name'],
+                        'money': data[i]['money']
+                    };
+                    chartData.push(tmp);
+                }
+                var chart = new AmCharts.AmPieChart();
+                chart.fontFamily = 'Arial';
+                chart.fontSize = 12; 
+                chart.pathToImages = '/images/amchart/';
+                chart.dataProvider = chartData;
+                chart.titleField = 'category_name';
+                chart.valueField = 'money';
+               /* chart.urlField = 'url';
+                chart.urlTarget = '_target';
+                chart.descriptionField = 'description'; */
+                chart.colors = ['#FF9900', '#FF33CC', '#3300FF', '#00CCFF', '#00FF33', '#CCFF00', '#CCCC00', '#00CC00', '#CC0000'];
+                chart.groupPercent = 1;
+                chart.groupedTitle = '其它';
+                chart.groupedDescription = '其它';
+                chart.balloonText = '[[title]]\n[[percents]]% ([[value]])';
+                chart.pullOutOnlyOne = true;
+  
+                var legend = new AmCharts.AmLegend();
+                legend.align = 'center';
+                legend.markerType = 'circle';
+                chart.addLegend(legend);
+
+                setTimeout(function(){chart.write('amchart');}, 200);
+  
+            }
             function makeTable(data) {
                var content = "" 
                var firstCategoryDetail = true;
                var firstCategory = true;
                var totalRow = 0;
                var totalMoney = 0;
-               content += "<table align='center' width='100%' border='0' cellspacing='1'  bgcolor='#AAAAAA' style='clear:both;'>";
+               content += "<table width='100%' class='table table-striped table-bordered' align='center'>";
                 content += "<tr bgcolor='#D6CDDE'>";
                 content += "<td><b><div align='center'>消费大类</div></b></td>";
                 content += "<td><b><div align='center'>消费明细类</div></b></td>";
@@ -87,13 +111,19 @@
                 $('#accounting_content').html(content);
             }
             function makeAccountingAgg() {
+                var type = $('[data-toggle="buttons-radio"] > .active').attr('name');
+                if (arguments.length >= 1) type = arguments[0];
                 var param = {};
                 param['start_date'] = $('#datepicker1').val();
                 param['end_date'] = $('#datepicker2').val();
                 $.get("getAccountingCategory.php",param,function(ret){
                     var retTrim = eval('(' + getResText(ret) + ')');
                     if(retTrim['status'] == 200) {
-                        makeTable(retTrim['data']);            
+                        if(type == 'table')
+                            makeTable(retTrim['data']);            
+                        else if(type == 'pie') {
+                            makePie(retTrim['data']);
+                        }
                     } else {
                         alert("数据获取失败");
                     }
@@ -109,6 +139,7 @@
                 $('#datepicker1').val(date.format('yyyy-mm-01'));
                 $('#datepicker1').datepicker("option","maxDate",$('#datepicker2').val());
                 $('#datepicker2').datepicker("option","minDate",$('#datepicker1').val());
+                $('[data-toggle="buttons-radio"] button').bind('click', function() {makeAccountingAgg($(this).attr('name'));});
                 makeAccountingAgg();
 
             }
@@ -116,26 +147,24 @@
         </script>
     </head>
     <body>
-        <div class="box">
-            <span style="padding-left:8px; font-size:15px;"> <a href="accounting_input.php">帐目录入</a>&nbsp;|&nbsp;<a href="accounting_detail.php">帐目明细</a>&nbsp;|&nbsp;账面汇总 </span>
-        </div>
-        <div style="height:30px;margin-top:5px;border-bottom: 1px solid #CCCCCC;" class="border_bottom">
-            <div style="float:left;margin-left:500px;"><b style="font-size:15px;">帐目汇总</b></div>
-            <div style="float:right; padding:5px;">
-            <span>Hi,&nbsp;<b><?php echo $userInfo['username']?></b>&nbsp;[<a href="login.php?logout=1">登出</a>]
-            </div>
-        </div>
-        <div style="height:10px"></div>
-        <div style="width:650px;margin-left:auto;margin-right:auto">
+    <div class="row">
+        <?php echo $user->getNav('accounting_agg',$userInfo['username']);?>
+        <div class="span7 offset3">
             
-            <div >
+            <div class="row">
             <span style="float:left;margin-top:7px;">起始时间</span>
-            <span style="float:left;margin-left: 5px;"><input class="rd_input"  type="text" id="datepicker1" name="datepicker1" readonly="true"></span>
+            <span style="float:left;margin-left: 5px;"><input  class="span2" type="text" id="datepicker1" name="datepicker1" readonly="true"></span>
             <span style="float:left;margin-left:20px;margin-top:7px;">结束时间</span>
-            <span style="float:left;margin-left: 5px;"><input class="rd_input"  type="text" id="datepicker2" name="datepicker2" readonly="true"></span>
+            <span style="float:left;margin-left: 5px;"><input class="span2" type="text" id="datepicker2" name="datepicker2" readonly="true"></span>
             </div>
-            <div style="clear:both;height:20px;"></div>
-            <div id="accounting_content"></div>
+            <div class="row">
+                <div class="pull-right btn-group" data-toggle="buttons-radio">
+                    <button name="table" class="btn active">表格</button>
+                    <button name="pie" class="btn ">饼图</button>
+                </div>
+            </div>
+            <div style="height:10px;"></div>
+            <div id="accounting_content" class="row"></div>
             <div id="detailUpdateDialog" style="display:none">
                 <center id="trend_title" style="font-family:courier new; font-size:18px;">修改消费明细</center>
                 <div><a href="javascript:void(0);" class="closebutton">[关闭]</a></div>
@@ -164,5 +193,7 @@
                 </div>
             </div>
         </div>
+    </div>
+    <?php echo $user->getFooter();?>
     </body>
 </html>

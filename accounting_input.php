@@ -12,25 +12,22 @@ if($_POST['uploadDetail']){
 }
 ?>
 
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>帐目录入</title>
 
-        <!-- Framework CSS -->
-        <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
-        <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
-        <!--[if lt IE 8]><link rel="stylesheet" href="../blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+        </!-- Framework CSS -->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" >
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css" > 
         <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link href="css/common.css" rel="stylesheet" type="text/css">
         <script src="js/jquery-1.4.2.min.js"></script>
         <script src="js/jquery-ui.min.js"></script>
         <script src="js/accounting.js"></script>
         <script src="js/common.js"></script>
-        <style type="text/css" media="screen">
-          p, table, hr, .box { margin-top:10px;margin-bottom:0px;padding:0px; }
-          .box p { margin-bottom:10px; }
-          .error,.alert,.notice,.success,.info{padding: 0.4em;margin-left:10px;} 
-        </style>
         <script>
             var globalCategoryList;
     /*        var categoryList = [];
@@ -86,35 +83,49 @@ if($_POST['uploadDetail']){
         </script>
     </head>
     <body>
-        <div class="box">
-            <span style="padding-left:8px; font-size:15px;"> 帐目录入&nbsp;|&nbsp;<a href="accounting_detail.php">帐目明细</a>&nbsp;|&nbsp;<a href="accounting_agg.php">账面汇总</a> </span>
-        </div>
-        <div style="height:30px;margin-top:5px;border-bottom: 1px solid #CCCCCC;" class="border_bottom">
-            <div style="float:left;margin-left:500px;"><b style="font-size:15px;">帐目录入</b></div>
-            <div style="float:right; padding:5px;">
-            <span>Hi,&nbsp;<b><?php echo $userInfo['username']?></b>&nbsp;[<a href="login.php?logout=1">登出</a>]
+    <?php echo $user->getNav('accounting_input',$userInfo['username']);?>
+    <div class="row">
+        <div class="span9">
+            <form action="accounting_input.php" class="well form-horizontal" method="post" onsubmit="return submitCheck('check1')">
+            <fieldset>
+            <legend>帐目录入</legend>
+            <?php echo(isset($uploadRet)) ? ("<div class='control-group'><label class='control-label'></label><span class='label label-success'>" . $uploadRet['tips'] . "</span></div>") : ""; ?>
+            <div class="control-group">
+                <label class="control-label" for="datepicker">消费时间</label>
+                <div class="controls">
+                    <input type="text" class="span2" id="datepicker" name="datepicker" class="uneditable-input">
+                </div>
             </div>
-        </div>
-        <div style="height:10px"></div>
-        <div style="width:650px;margin-left:auto;margin-right:auto">
-            <?php echo(isset($uploadRet)) ? ("<div style='width:300px;margin-left:auto;margin-right:auto'><span class='success'>" . $uploadRet['tips'] . "</span></div>") : ""; ?>
-            <form action="accounting_input.php" method="post" onsubmit="return submitCheck('check1')">
-            <div >
-            <span style="float:left;margin-top:7px;">消费时间</span>
-            <span style="float:left;margin-left: 5px;"><input class="rd_input"  type="text" id="datepicker" name="datepicker" readonly="true"></span>
+            <div class="control-group">
+                <label class="control-label" for="category">请选择消费类别:</label>
+                <div class="controls">
+                    <select name="category" class="span2" id="category" ></select>
+                <div class="help-inline"><font color="red"> *消费类别</font>
+                </div>
+                </div>
             </div>
-            <div style="clear:both;float:left;">
-                <span>请选择消费类别:</span><span style="margin-left:5px;"><select name="category" id="category" style="width:250px;"></select></span><span style="margin-left:10px;"><font color="red"> *消费类别</font></span>
+            <div class="control-group">
+                <label class="control-label" for="money">请输入金额:</label>
+                <div class="controls">
+                    <input type="text" id="money" class="span2" error_id="money_error" check_name="check1" check_id="1" name="money">
+                    <div class="help-inline"><font color="red"> *金额</font>
+                    </div>
+                    <p class="help-block error alert alert-error" id="money_error" style="display:none" ><strong>金额必须是数字</strong></p>
+                </div>
             </div>
-            <div style="clear:both;float:left;">
-                <span>请输入金额：</span><span style="margin-left:5px;"><input type="text" id="money" error_id="money_error" check_name="check1" check_id="1" name="money"></span><span style="margin-left:10px;"><font color="red"> *金额</font></span><span id="money_error" style="display:none" class="error">金额必须是数字</span>
+            <div class="control-group">
+                <label class="control-label" for="other_information">其他描述信息:</label>
+                <div class="controls">
+                    <input type="text" name="other_information" class="span3">
+                </div>
             </div>
-            <div style="clear:both;float:left;">
-                <span>其他描述信息：</span><span style="margin-left:5px;"><input type="text" name="other_information" size="30"></span></span>
+            <div class="form-actions">
+                <input type="submit" class="btn btn-info" value="提交" name="uploadDetail">
             </div>
-            <div style="clear:both;height:10px;">
-            <div style="clear:both;margin-left:100px;"><input type="submit" value="提交" name="uploadDetail"></div>
+            </fieldset>
             </form>
         </div>
+    </div>
+        <?php echo $user->getFooter();?>
     </body>
 </html>
